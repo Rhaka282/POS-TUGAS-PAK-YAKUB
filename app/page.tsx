@@ -150,17 +150,17 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Hero Image */}
+          {/* Hero Video */}
           <div className="relative hidden lg:block">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl blur-3xl scale-110" />
             <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-black/50">
-              <Image
-                src="/laptop_hero.png"
-                alt="LaptopVerse Hero"
-                width={700}
-                height={450}
+              <video
+                src="/Broken_laptops_restored_202604240831.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
                 className="w-full object-cover"
-                priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#080c14]/60 via-transparent to-transparent" />
             </div>
