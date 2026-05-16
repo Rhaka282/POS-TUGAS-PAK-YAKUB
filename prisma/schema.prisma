@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PENGUNJUNG
+}
+
+enum StatusPeminjaman {
+  DIPINJAM
+  DIKEMBALIKAN
+}
+
+model User {
+  id          String        @id @default(cuid())
+  name        String
+  email       String        @unique
+  password    String
+  role        Role          @default(PENGUNJUNG)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  peminjaman  Peminjaman[]
+}
+
+model Product {
+  id          String        @id @default(cuid())
+  name        String
+  brand       String
+  buyPrice    Float
+  sellPrice   Float
+  stock       Int           @default(0)
+  specs       String?
+  description String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  purchases   Purchase[]
+  sales       Sale[]
+  peminjaman  Peminjaman[]
+}
+
+model Supplier {
+  id        String   @id @default(cuid())
+  name      String
+  contact   String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  purchases Purchase[]
+}
+
+model Purchase {
+  id         String   @id @default(cuid())
+  productId  String
+  supplierId String
+  quantity   Int
+  buyPrice   Float
+  date       DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  product    Product  @relation(fields: [productId], references: [id])
+  supplier   Supplier @relation(fields: [supplierId], references: [id])
+}
+
+model Sale {
+  id           String   @id @default(cuid())
+  productId    String
+  customerName String?
+  quantity     Int
+  sellPrice    Float
+  totalPrice   Float
+  date         DateTime @default(now())
+  createdAt    DateTime @default(now())
+
+  product      Product  @relation(fields: [productId], references: [id])
+}
+
+model Peminjaman {
+  id             String           @id @default(cuid())
+  userId         String
+  productId      String
+  namaPeminjam   String
+  tanggalPinjam  DateTime         @default(now())
+  tanggalKembali DateTime?
+  status         StatusPeminjaman @default(DIPINJAM)
+  catatan        String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+}
